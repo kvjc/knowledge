@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 import java.util.GregorianCalendar;
@@ -23,22 +24,27 @@ public class Project{
 	private Calendar finalDate;
     private TypeProject typeProject;
     private Stage[] stages;
+    private int numKU;
 
 	private DateFormat formatter;
 
-	public Project(String projectName, String projectClient, String managerName, String managerPhone,  double budget, Calendar initialDate, Calendar finalDate, TypeProject typeProject){
+    
+
+	public Project(String projectName, String projectClient, String managerName, String managerPhone,  double budget, Calendar initialDate, Calendar finalDate, TypeProject typeProject, int numKU){
 		
         this.stages = new Stage[6]; //[null,null,...,null]
 
+        
 
-        String[] sName = {"initiation", "planning", "design", "execution", "closure", "monitoring and control"};
+        String[] sName = {"Initiation", "Planning", "Design", "Execution", "Closure", "Monitoring and Control"};
+        
 
-        addStage(sName[0], initialDate, null, "Activa");
-        addStage(sName[1], initialDate, finalDate, "Inactiva");
-        addStage(sName[2], initialDate, finalDate, "Inactiva");
-        addStage(sName[3], initialDate, finalDate, "Inactiva");
-        addStage(sName[4], initialDate, finalDate, "Inactiva");
-        addStage(sName[5], initialDate, finalDate, "Inactiva");
+        addStage(sName[0], initialDate, null,  null,  "Activa");
+        addStage(sName[1], initialDate, finalDate, null,"Inactiva");
+        addStage(sName[2], initialDate, finalDate, null,"Inactiva");
+        addStage(sName[3], initialDate, finalDate, null,"Inactiva");
+        addStage(sName[4], initialDate, finalDate, null,"Inactiva");
+        addStage(sName[5], initialDate, finalDate,null, "Inactiva");
 
 		this.formatter = new SimpleDateFormat("dd/MM/yy");
 		this.projectName = projectName;
@@ -52,9 +58,10 @@ public class Project{
         
 	}
 
-    public boolean addStage(String name, Calendar initialDate, Calendar finalDate, String status){
+
+    public boolean addStage(String name, Calendar initialDateR, Calendar finalDateR, Calendar finalDateP, String status){
         
-        Stage newStage = new Stage(name, initialDate, finalDate, status);
+        Stage newStage = new Stage(name, initialDateR, finalDateR, finalDateP, status);
 
         for(int i = 0; i<stages.length; i++){
 
@@ -81,11 +88,14 @@ public class Project{
 
     }
 
-    public boolean addKnowledgeUnitToStage(String id, String description, String type, String learnedLessons, String status) {
+    public boolean addKnowledgeUnitToStage(String cName, String id, String description, int typeKU, String learnedLessons, String status) {
 
-		if(stage.addKU(id, description, type, learnedLessons, status)){
+		if(stage.addKU(cName, id, description, typeKU, learnedLessons, status)){
 			return true;
 		}
+
+        setNumKU(+1);
+    
 
 		return false;
 	}
@@ -159,8 +169,20 @@ public class Project{
         this.stages = stages;
     }
 
+    
+
+    public int getNumKU() {
+        return numKU;
+    }
+
+
+    public void setNumKU(int numKU) {
+        this.numKU = numKU;
+    }
+
+
     public String getProjectInfo() throws ParseException{
-		return "\nProject's name: " + projectName + "\nProject's client: " + projectClient + "\nBudget: " +budget +"Manager name: "+managerName +"\nManager's phone: " +managerPhone +"\nFinal Date" + getFinalDateFormated() +"\nInitial Date" + getInitialDateFormated() +"Type: " +typeProject + ".\n";
+		return "\nProject's name: " + projectName + "\nProject's client: " + projectClient + "\nBudget: " +budget +"Manager name: "+managerName +"\nManager's phone: " +managerPhone +"\nFinal Date: " + getFinalDateFormated() +"\nInitial Date: " + getInitialDateFormated() +"\nType: " +typeProject + ".\n";
 	}
 
     public String getAllStages() throws ParseException {
@@ -170,7 +192,7 @@ public class Project{
 	 	for(int i=0; i<stages.length; i++){
 
             if(stages[i]!=null){
-            	msg += "\n" +stages[i].getProjectInfo();    
+            	msg += "\n" +stages[i].getStageInfo();    
             }
 
         } 
@@ -178,6 +200,18 @@ public class Project{
 		return msg;
 
 	}
+
+    @Override
+    public String toString() {
+        return "Project \nstage=" + stage + " \nprojectName=" + projectName + "\nprojectClient=" + projectClient
+                + "\nmanagerName=" + managerName + "\nmanagerPhone=" + managerPhone + "\nbudget=" + budget
+                + "\ninitialDate=" + initialDate + "\nfinalDate=" + finalDate + "\ntypeProject=" + typeProject
+                + "\nstages=" + Arrays.toString(stages) + "\nformatter=" + formatter + "\n";
+    }
+
+
+
+    
 }
 
 

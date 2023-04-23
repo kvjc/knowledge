@@ -37,13 +37,19 @@ public class Executable {
             System.out.println("5. Register knowledge unit");
             System.out.println("6. Modify knowledge unit");
             System.out.println("7. Consult knowledge units");
-			System.out.println("8. Approve knowledge unit");			
-            System.out.println("9. Exit"); 
+			System.out.println("8. Approve knowledge unit");
+			System.out.println("9. Culminate knowledge unit");
+			System.out.println("10. Consult Capsules registered for each type of capsule");
+			System.out.println("11. Search lessons learned by stage");
+			System.out.println("12. Find the name of the project with the most registered capsules");
+			System.out.println("13. Search partner's name");
+			System.out.println("14. Search information");
+            System.out.println("15. Exit"); 
             int opcion = reader.nextInt();
 
             switch(opcion){
                 case 1: 
-                    registerProject();
+                     registerProject();
 
                     break;
 
@@ -92,7 +98,43 @@ public class Executable {
                     
                 
                 case 9:
-                    cond = true;
+					culminateStage();
+
+					break;
+				
+				case 10:
+
+					typeKu();
+
+					break;
+				
+				case 11:
+
+					lessonKU();
+
+					break;
+
+				case 12:
+
+					numKU();
+
+					break;
+
+				case 13:
+
+					findName();
+
+					break;
+
+				case 14:
+
+					findDesLess();
+
+					break;
+
+				case 15:
+					cond = true;	
+					
                 
             }
         }
@@ -121,7 +163,7 @@ public class Executable {
 		System.out.println("Enter the budget");
 		double budget = reader.nextDouble();
 
-		System.out.println("Enter the type \n1.DEPLOYMENT, \n2.MAINTENANCE \n3.DEPLOYMENT");
+		System.out.println("Enter the type \n1.DEPLOYMENT \n2.MAINTENANCE \n3.DEPLOYMENT");
 		int type = reader.nextInt();
 		
 
@@ -149,7 +191,32 @@ public class Executable {
 		int fYear = reader.nextInt();
 
 
-		if (controller.registerProject(projectName, projectClient, managerName, managerPhone, budget, iDay, fDay, iMonth, fMonth, iYear, fYear, type)) {
+
+		System.out.println("Enter the approximate duration of the stages in months"); 
+
+		System.out.println("Initiation");
+		int inMonth = reader.nextInt();
+
+		System.out.println("Planning");
+		int plMonth = reader.nextInt();
+
+		System.out.println("Design");
+		int deMonth = reader.nextInt();
+
+		System.out.println("Execution");
+		int exMonth = reader.nextInt();
+
+		System.out.println("Closure");
+		int clMonth = reader.nextInt();
+
+		System.out.println("Monitoring and Control");
+		int macMonth = reader.nextInt();
+
+
+		int numKU = 0;
+
+
+		if (controller.registerProject(projectName, projectClient, managerName, managerPhone, budget, iDay, fDay, iMonth, fMonth, iYear, fYear, type, numKU)) {
 			System.out.println("project registered successfully!");
 		} else {
 			System.out.println("Could not register the project :(");
@@ -266,19 +333,21 @@ public class Executable {
             System.out.println("There are no registered knowledge units :(");
         }else{
             System.out.println(consultau);
+			
+			System.out.println("Select the unit to approve its status");
+			int posicionu = reader.nextInt();
+		
+			reader.nextLine();
+
+			System.out.println("Write the status of the unit");
+			String status = reader.nextLine();
+
+			controller.approveKnowledgeUnit(project, stage, posicionu, status);
+			System.out.println("The unit status has been modified.");
         }
 
 
-		System.out.println("Select the unit to approve its status");
-		int posicionu = reader.nextInt();
 		
-		reader.nextLine();
-
-		System.out.println("Write the status of the unit");
-		String status = reader.nextLine();
-
-		controller.approveKnowledgeUnit(project, stage, posicionu, status);
-		System.out.println("The unit status has been modified.");
 
 	}
 
@@ -313,9 +382,13 @@ public class Executable {
 		System.out.println("Choose a atage");
 		int stage = reader.nextInt();
 
+
 		System.out.println("Enter the information of the knowledge unit");
 
 		reader.nextLine();
+
+		System.out.println("Enter the Collaborator's name ");
+		String cName = reader.nextLine();
 
 		System.out.println("Enter the identifier of the unit");
 		String id = reader.nextLine();
@@ -323,16 +396,19 @@ public class Executable {
 		System.out.println("Enter the description of the unit");
 		String description = reader.nextLine();
 
-		System.out.println("Enter the type of the unit");
-		String type = reader.nextLine();
-
 		System.out.println("Enter the learned lesson");
 		String learnedLessons = reader.nextLine();
+		
+		System.out.println("Enter the type of the unit \n1.TECHNICAL \n2.MANAGEMENT  \n3.EXPERIENCES \n4.DOMAIN");
+		int typeKU = reader.nextInt();
+
+		
 
 		
 		String status = "To define";
 
-		if (controller.registerKnowledgeUnit(project, stage, id, description, type, learnedLessons, status)) {
+
+		if (controller.registerKnowledgeUnit(project, stage, cName, id, description, typeKU, learnedLessons, status)) {
 			System.out.println("Knowledge unit registered successfully!");
 		} else {
 			System.out.println("Could not register the knowledge unit :(");
@@ -362,16 +438,15 @@ public class Executable {
 		int project = reader.nextInt();
 
 
-
 		System.out.println("These are the stages");
-		String consultas = controller.getAllStages(project);
-        System.out.println(consultas);
+		String consulStage = controller.getAllStages(project);
+        System.out.println(consulStage);
 		System.out.println("Choose a atage");
-		int stage = reader.nextInt();
+		int posS = reader.nextInt();
 
 		System.out.println("This is the information registered in the system");
         
-        String consulta = controller.getAllKnowledgeUnits(project, stage);
+        String consulta = controller.getAllKnowledgeUnits(project, posS);
 
 		if(consulta.equals("")){
 
@@ -414,11 +489,11 @@ public class Executable {
 
 
 		System.out.println("These are the knowledge units registered in the system");
-		String consulta = controller.getAllKnowledgeUnits(project, stage);System.out.println("Enter the number of the knowledge unit");
+		String consulta = controller.getAllKnowledgeUnits(project, stage);
+		System.out.println(consulta);
+		System.out.println("Enter the number of the knowledge unit");
 		int posicionN = reader.nextInt();
 		
-
-
 
 		if(consulta.equals("")){
 
@@ -430,18 +505,25 @@ public class Executable {
 		System.out.println("Select the unit to modify");
 		int posicion = reader.nextInt();
 
-		controller.getSpecificKnowledgeUnits(posicion, project, stage); 
+		controller.getSpecificKnowledgeUnits(posicionN, project, stage); 
 
 		System.out.println("Select which attribute to modify \n1. Description \n2. Type \n3. LearnedLesson");
 		int atributo = reader.nextInt();
 
 		reader.nextLine();
 
-		System.out.println("Write the modification");
-		String mod = reader.nextLine();
+		if(atributo==2){
+			System.out.println("Enter the type of the unit \n1.TECHNICAL \n2.MANAGEMENT \n3.DOMAIN \n4.EXPERIENCES");
+			String mod = reader.nextLine();
 
-		controller.modifcarCapsula(project, stage, posicion, atributo, mod);
-		System.out.println("The unit has been modified ");
+		}else{
+
+			System.out.println("Write the modification");
+			String mod = reader.nextLine();
+
+			controller.modifcarCapsula(project, stage, posicion, atributo, mod);
+			System.out.println("The unit has been modified ");
+		}
 
 	}
 
@@ -492,10 +574,85 @@ public class Executable {
 		System.out.println("Enter the year");
 		int fYearR = reader.nextInt();
 
+		controller.culminateStage(project, stage, fDayR, fMonthR, fYearR);
+		System.out.println("The Stage has been modified ");
 
 
 	}
 
+	public void typeKu(){
+		
+		String consultKu = controller.typeKu();
+
+		System.out.println(consultKu);
+
+	}
+
+	public void lessonKU() throws ParseException{
+
+		System.out.println("These are the available projects");
+		String consultap = controller.getAllProjects();
+		if(consultap.equals("")){
+
+            System.out.println("There are no registered projects :(");
+        }else{
+            System.out.println(consultap);
+        }
+		System.out.println("Choose a project");
+		int posicionP = reader.nextInt();
+
+
+		System.out.println("These are the stages");
+		String consultas = controller.getAllStages(posicionP);
+        System.out.println(consultas);
+		System.out.println("Choose a atage");
+		int posicionS = reader.nextInt();
+
+		String consultKu = controller.lessonKU(posicionP-1, posicionS-1);
+
+		System.out.println(consultKu);
+
+		
+	}
+
+	public void numKU(){
+		
+		String consultKu = controller.numKU();
+
+		System.out.println("The project with the highest number of capsules is: "+consultKu);
+
+	}
+
+	public void findName(){
+		reader.nextLine();
+
+		System.out.println("Enter the name of the collaborator");
+		String cName = reader.nextLine();
+		
+
+		if(controller.findName(cName)){
+			System.out.println("The entered name has registered knowledge capsules");
+		} else{
+			System.out.println("The entered name hasn't registered knowledge capsules");
+		}
+	}
+
+	public void findDesLess(){
+		reader.nextLine();
+
+		System.out.println("Enter the information you want to search for");
+		String information = reader.nextLine();
+		
+		String consult = controller.findDesLess(information);
+
+		if(consult.equals("")){
+
+            System.out.println("There are no registered information");
+        }else{
+            System.out.println(consult);
+        }
+	
+	}
 
 
 }

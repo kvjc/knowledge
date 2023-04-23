@@ -7,13 +7,16 @@ public class KnowledgeUnit {
 	private String type;
 	private String learnedLessons;
 	private String status;
+	private TypeKU typeKU;
+	private String cName;
 
-	public KnowledgeUnit(String id, String description, String type, String learnedLessons, String status) {
+	public KnowledgeUnit(String cName, String id, String description, TypeKU typeKU, String learnedLessons, String status) {
 
 		this.id = id;
 		this.description = description;
-		this.type = type;
+		this.typeKU = typeKU;
 		this.learnedLessons = learnedLessons;
+		this.cName = cName;
 		this.status = "Por definir";
 	}
 
@@ -57,15 +60,27 @@ public class KnowledgeUnit {
 	public void setStatus(String status){
 		this.status = status;
 	}
-	
-	public String toString(){
 
-		String msg = "";
-
-		msg = "\nid: " + id + "\ndescription: " + description + "\nType: " +type +"LearnedLesson: "+learnedLessons +"\nStatus: " +status +"\n";
-
-		return msg;
+	public TypeKU getTypeKU() {
+		return typeKU;
 	}
+
+
+	public void setTypeKU(TypeKU typeKU) {
+		this.typeKU = typeKU;
+	}
+	
+
+
+	public String getcName() {
+		return cName;
+	}
+
+
+	public void setcName(String cName) {
+		this.cName = cName;
+	}
+
 
 	public String toStringA(){
 
@@ -76,5 +91,14 @@ public class KnowledgeUnit {
 		return msg;
 
 	}
+
+
+	@Override
+	public String toString() {
+		return "KnowledgeUnit [Collaborator's name = " + cName + "id=" + id + ", description=" + description + ", type=" + typeKU + ", learnedLessons="
+				+ learnedLessons + ", status=" + status + "]";
+	}
+
+	
 
 }
